@@ -1,4 +1,4 @@
-# alt:vRP
+# alt:vRP-Views
 
 Front-end for [alt:vRP](https://github.com/Sighmir/altvrp).
 
