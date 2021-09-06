@@ -1,4 +1,4 @@
-export enum Level {
+export enum LogLevel {
   ERROR,
   WARN,
   INFO,
@@ -12,16 +12,16 @@ export interface Logger {
   error: (...text: any[]) => void;
 }
 
-export const getLogger = (name: string, level: Level = Level.DEBUG): Logger => {
-  const log = (text: any[], logLevel: Level) => {
+export const getLogger = (name: string, level: LogLevel = LogLevel.DEBUG): Logger => {
+  const log = (text: any[], logLevel: LogLevel) => {
     if (level >= logLevel) {
-      console.log(`[${Level[logLevel]}] [${name}]`, ...text);
+      console.log(`[${LogLevel[logLevel]}] [${name}]`, ...text);
     }
   };
   return {
-    debug: (...text: any[]) => log(text, Level.DEBUG),
-    info: (...text: any[]) => log(text, Level.INFO),
-    warn: (...text: any[]) => log(text, Level.WARN),
-    error: (...text: any[]) => log(text, Level.ERROR),
+    debug: (...text: any[]) => log(text, LogLevel.DEBUG),
+    info: (...text: any[]) => log(text, LogLevel.INFO),
+    warn: (...text: any[]) => log(text, LogLevel.WARN),
+    error: (...text: any[]) => log(text, LogLevel.ERROR),
   };
 };
