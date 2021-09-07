@@ -1,8 +1,6 @@
-import { Drawer } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import styled from "styled-components";
 
-export const CreationDrawer = styled(Drawer)`
-  .MuiDrawer-paper {
-    width: 220px;
-  }
+export const CreationContainer = styled(Grid)`
+  max-width: 15%;
 `;

@@ -1,5 +1,5 @@
-import colorify from '@modules/colorify';
-import * as proxy from '@modules/proxy';
+import colorify from 'modules/colorify';
+import * as proxy from 'modules/proxy';
 import React from 'react';
 import { Chatbox, MessageInput, MessageList } from './styles';
 
