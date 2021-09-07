@@ -3,6 +3,7 @@ import { getLogger } from "./logger";
 
 const logger = getLogger("altvrp:web:proxy");
 
+export type AltEvent = { id: string, handler: EventHandler }
 export type EventHandler = (...args: any[]) => any;
 export type EventProxy<T = EventHandler> = Map<string, T> & {
   [key: string]: T;
@@ -18,6 +19,8 @@ const getAlt = () => {
   }
   return window.alt
 };
+
+const buffer: AltEvent[] = [];
 
 const getProxyCallbackId = (event: string) =>
   `${event}:${Math.round(new Date().getTime())}`;
@@ -41,7 +44,7 @@ export const view = new Proxy(new Map<string, EventHandler>(), {
         const id = getProxyCallbackId(event);
         const handler = (result: any) => {
           logger.debug(`${event} ${args} <=@=!`);
-          alt.off(id, handler);
+          buffer.push({id, handler});
           resolve(result);
         };
         alt.on(id, handler);
@@ -64,3 +67,10 @@ export const view = new Proxy(new Map<string, EventHandler>(), {
     return true;
   },
 }) as EventProxy;
+
+setInterval(() => {
+  if (buffer.length) {
+    const event = buffer.pop()
+    alt.off(event!.id, event!.handler)
+  }
+}, 100)
