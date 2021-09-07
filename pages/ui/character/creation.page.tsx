@@ -70,10 +70,10 @@ function CharacterCreation() {
       </Grid>
       <ArrowSelect title="Father's face:" values={fathers} current={fatherFace} setCurrentValue={setFatherFace} />
       <ArrowSelect title="Mother's face:" values={mothers} current={motherFace} setCurrentValue={setMotherFace} />
-      <Slider defaultValue={faceMix} min={0} max={1} step={0.01} onChange={onSkinMix} aria-labelledby="continuous-slider" />
+      <Slider defaultValue={faceMix} min={0} max={1} step={0.01} onChange={onFaceMix} aria-labelledby="continuous-slider" />
       <ArrowSelect title="Father's skin:" values={fathers} current={fatherSkin} setCurrentValue={setFatherSkin} />
       <ArrowSelect title="Mother's skin:" values={mothers} current={motherSkin} setCurrentValue={setMotherSkin} />
-      <Slider defaultValue={skinMix} min={0} max={1} step={0.01} onChange={onFaceMix} aria-labelledby="continuous-slider" />
+      <Slider defaultValue={skinMix} min={0} max={1} step={0.01} onChange={onSkinMix} aria-labelledby="continuous-slider" />
     </CreationContainer>
   );
 }
