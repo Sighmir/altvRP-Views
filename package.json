@@ -23,7 +23,8 @@
     "components": ".next/components",
     "pages": ".next/pages",
     "modules": ".next/modules",
-    "styles": ".next/styles"
+    "styles": ".next/styles",
+    "data": ".next/data"
   },
   "devDependencies": {
     "@altv/types-webview": "^1.0.2",

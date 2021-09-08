@@ -5,16 +5,20 @@ interface ArrowSelectProps {
   title: string
   values: string[]
   current: number
-  setCurrentValue: React.Dispatch<React.SetStateAction<number>>
+  skip?: string[]
+  setCurrent: React.Dispatch<React.SetStateAction<number>>
 }
 
 function ArrowSelect(props: ArrowSelectProps) {
-  const { title, values, current, setCurrentValue } = props;
+  const { title, values, current, skip, setCurrent } = props;
 
   const onClickLeft = (e: FormEvent) => {
     e.preventDefault()
-    setCurrentValue((prevCurrent) => {
+    setCurrent((prevCurrent) => {
       let newCurrent = prevCurrent - 1;
+      if (skip && skip.includes(values[newCurrent])) {
+        newCurrent = newCurrent - 1;
+      }
       if (newCurrent < 0) newCurrent = values.length - 1;
       return newCurrent;
     })
@@ -22,8 +26,11 @@ function ArrowSelect(props: ArrowSelectProps) {
 
   const onClickRight = (e: FormEvent) => {
     e.preventDefault()
-    setCurrentValue((prevCurrent) => {
+    setCurrent((prevCurrent) => {
       let newCurrent = prevCurrent + 1;
+      if (skip && skip.includes(values[newCurrent])) {
+        newCurrent = newCurrent + 1;
+      }
       if (newCurrent >= values.length) newCurrent = 0;
       return newCurrent;
     })
@@ -40,7 +47,7 @@ function ArrowSelect(props: ArrowSelectProps) {
           <Button onClick={onClickLeft}>&lt;</Button>
       </Grid>
       <Grid xs={4} item>
-          <Typography>{values[current]}</Typography>
+          <Typography>{String(values[current])}</Typography>
       </Grid>
       <Grid xs={4} item>
           <Button onClick={onClickRight}>&gt;</Button>
