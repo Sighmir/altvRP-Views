@@ -1,5 +1,5 @@
-const colorify = (text: string) => {
-  let matches = [];
+const colorify = (text: string): string => {
+  const matches = [];
   let m = null;
   let curPos = 0;
 
@@ -12,19 +12,18 @@ const colorify = (text: string) => {
 
     matches.push({
       found: m[0],
-      index: m["index"] + curPos,
+      index: m['index'] + curPos,
     });
 
-    curPos = curPos + m["index"] + m[0].length;
+    curPos = curPos + m['index'] + m[0].length;
   } while (m !== null);
 
   if (matches.length > 0) {
-    text += "</font>";
+    text += '</font>';
 
     for (let i = matches.length - 1; i >= 0; --i) {
-      let color = matches[i].found.substring(1, matches[i].found.length - 1);
-      let insertHtml =
-        (i !== 0 ? "</font>" : "") + '<font color="#' + color + '">';
+      const color = matches[i].found.substring(1, matches[i].found.length - 1);
+      const insertHtml = (i !== 0 ? '</font>' : '') + '<font color="#' + color + '">';
       text =
         text.slice(0, matches[i].index) +
         insertHtml +

@@ -3,7 +3,7 @@ import * as proxy from 'modules/proxy';
 import React from 'react';
 import { Chatbox, MessageInput, MessageList } from './styles';
 
-function Chat() {
+function Chat(): JSX.Element {
   const buffer = [] as string[];
   const chatboxRef = React.createRef<HTMLDivElement>();
   const messagesRef = React.createRef<HTMLDivElement>();
@@ -16,11 +16,11 @@ function Chat() {
 
   const checkOverflow = () => {
     if (messagesRef.current!.clientHeight > msgListRef.current!.clientHeight) {
-      if (!msgListRef.current!.classList.contains("overflowed")) {
-        msgListRef.current!.classList.add("overflowed");
+      if (!msgListRef.current!.classList.contains('overflowed')) {
+        msgListRef.current!.classList.add('overflowed');
       }
-    } else if (msgListRef.current!.classList.contains("overflowed")) {
-      msgListRef.current!.classList.remove("overflowed");
+    } else if (msgListRef.current!.classList.contains('overflowed')) {
+      msgListRef.current!.classList.remove('overflowed');
     }
   };
 
@@ -40,25 +40,22 @@ function Chat() {
     msgListRef.current!.scrollTo({
       left: 0,
       top: msgListRef.current!.scrollHeight,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
-    chatboxRef.current!.classList.add("active");
+    chatboxRef.current!.classList.add('active');
     clearTimeout(timeout);
-    timeout = setTimeout(
-      () => chatboxRef.current!.classList.remove("active"),
-      4000
-    );
+    timeout = setTimeout(() => chatboxRef.current!.classList.remove('active'), 4000);
   };
 
   React.useEffect(() => {
     let chatOpened = false;
-    
+
     proxy.view.openChat = () => {
       clearTimeout(timeout);
       if (!chatOpened) {
-        chatboxRef.current!.classList.add("active");
-        msgInputDivRef.current!.style.display = "block";
-        msgInputDivRef.current!.style.opacity = "1";
+        chatboxRef.current!.classList.add('active');
+        msgInputDivRef.current!.style.display = 'block';
+        msgInputDivRef.current!.style.opacity = '1';
         msgInputRef.current!.focus();
         chatOpened = true;
       }
@@ -66,18 +63,18 @@ function Chat() {
 
     proxy.view.closeChat = () => {
       if (chatOpened) {
-        chatboxRef.current!.classList.remove("active");
+        chatboxRef.current!.classList.remove('active');
         msgInputRef.current!.blur();
-        msgInputDivRef.current!.style.display = "none";
+        msgInputDivRef.current!.style.display = 'none';
         chatOpened = false;
       }
     };
 
-    proxy.view.addString = (text: string, prefix: string = "") => {
+    proxy.view.addString = (text: string, prefix = '') => {
       if (messagesRef.current!.children.length > 100) {
         messagesRef.current!.removeChild(messagesRef.current!.children[0]);
       }
-      const msg = document.createElement("p");
+      const msg = document.createElement('p');
       msg.innerHTML = prefix + colorify(text);
       messagesRef.current!.appendChild(msg);
       checkOverflow();
@@ -86,7 +83,7 @@ function Chat() {
 
     proxy.view.addMessage = (name, text) => proxy.view.addString(text, `<b>${name}: </b>`);
     proxy.view.chatLoaded();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -94,27 +91,27 @@ function Chat() {
     proxy.view.chatMessage(msgInputRef.current!.value);
     saveBuffer();
     proxy.view.closeChat();
-    msgInputRef.current!.value = "";
-  }
+    msgInputRef.current!.value = '';
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.code === "Tab") {
+    if (e.code === 'Tab') {
       e.preventDefault();
-    } else if (e.code === "ArrowDown") {
+    } else if (e.code === 'ArrowDown') {
       e.preventDefault();
       if (currentBufferIndex > 0) {
         loadBuffer(--currentBufferIndex);
       } else if (currentBufferIndex === 0) {
         currentBufferIndex = -1;
-        msgInputRef.current!.value = "";
+        msgInputRef.current!.value = '';
       }
-    } else if (e.code === "ArrowUp") {
+    } else if (e.code === 'ArrowUp') {
       e.preventDefault();
       if (currentBufferIndex < buffer.length - 1) {
         loadBuffer(++currentBufferIndex);
       }
     }
-  }
+  };
 
   return (
     <div className="content">

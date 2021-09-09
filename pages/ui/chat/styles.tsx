@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Chatbox = styled.div`
   position: absolute;
@@ -70,12 +70,7 @@ export const MessageList = styled.div`
   overflow-y: hidden;
   height: 100%;
   & .overflowed {
-    mask-image: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 1) 20%,
-      rgba(0, 0, 0, 1) 100%
-    );
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 1) 100%);
     -webkit-mask-image: -webkit-linear-gradient(
       to bottom,
       rgba(0, 0, 0, 0) 0%,

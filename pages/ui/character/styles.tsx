@@ -1,5 +1,4 @@
-import { ButtonGroup } from "@material-ui/core";
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const CreationNav = styled.nav`
   margin: 10px;
@@ -10,12 +9,3 @@ export const CreationNav = styled.nav`
     text-transform: none;
   }
 `;
-
-export const ArrowSelect = styled(ButtonGroup)`
-  right: 0px;
-  & .MuiButton-root.Mui-disabled {
-    text-transform: uppercase;
-    color: black;
-    width: 110px;
-  }
-`
