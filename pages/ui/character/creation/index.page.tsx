@@ -9,12 +9,12 @@ import { CreationNav } from '../styles';
 function CharacterCreation(): JSX.Element {
   const [fatherFace, setFatherFace] = React.useState<number>(0);
   const [motherFace, setMotherFace] = React.useState<number>(0);
-  const [faceMix, setFaceMix] = React.useState<number>(1.0);
+  const [faceMix, setFaceMix] = React.useState<number>(0.5);
   const [faceOpen, setFaceOpen] = React.useState(false);
 
   const [fatherSkin, setFatherSkin] = React.useState<number>(0);
   const [motherSkin, setMotherSkin] = React.useState<number>(0);
-  const [skinMix, setSkinMix] = React.useState<number>(1.0);
+  const [skinMix, setSkinMix] = React.useState<number>(0.5);
   const [skinOpen, setSkinOpen] = React.useState(false);
 
   const [gender, setGender] = React.useState<'m' | 'f'>('m');
@@ -27,33 +27,40 @@ function CharacterCreation(): JSX.Element {
   const [hairOpen, setHairOpen] = React.useState(false);
   const ignoredHairs = ['Night Vision'];
 
-  const [overlaysOpen, setOverlaysOpen] = React.useState(false);
-  const [blemishes, setBlemishes] = React.useState<number>(0);
+  const [overlayOpen, setOverlayOpen] = React.useState(false);
+  const [blemishes, setBlemishes] = React.useState<number>(255);
   const [blemishesOpacity, setBlemishesOpacity] = React.useState<number>(1.0);
-  const [facialHair, setFacialHair] = React.useState<number>(0);
+  const [facialHair, setFacialHair] = React.useState<number>(255);
   const [facialHairOpacity, setFacialHairOpacity] = React.useState<number>(1.0);
-  const [eyebrows, setEyebrows] = React.useState<number>(0);
+  const [eyebrows, setEyebrows] = React.useState<number>(255);
   const [eyebrowsOpacity, setEyebrowsOpacity] = React.useState<number>(1.0);
-  const [ageing, setAgeing] = React.useState<number>(0);
+  const [ageing, setAgeing] = React.useState<number>(255);
   const [ageingOpacity, setAgeingOpacity] = React.useState<number>(1.0);
-  const [makeup, setMakeup] = React.useState<number>(0);
+  const [makeup, setMakeup] = React.useState<number>(255);
   const [makeupOpacity, setMakeupOpacity] = React.useState<number>(1.0);
-  const [blush, setBlush] = React.useState<number>(0);
+  const [blush, setBlush] = React.useState<number>(255);
   const [blushOpacity, setBlushOpacity] = React.useState<number>(1.0);
-  const [complexion, setComplexion] = React.useState<number>(0);
+  const [complexion, setComplexion] = React.useState<number>(255);
   const [complexionOpacity, setComplexionOpacity] = React.useState<number>(1.0);
-  const [sunDamage, setSunDamage] = React.useState<number>(0);
+  const [sunDamage, setSunDamage] = React.useState<number>(255);
   const [sunDamageOpacity, setSunDamageOpacity] = React.useState<number>(1.0);
-  const [lipstick, setLipstick] = React.useState<number>(0);
+  const [lipstick, setLipstick] = React.useState<number>(255);
   const [lipstickOpacity, setLipstickOpacity] = React.useState<number>(1.0);
-  const [molesFreckles, setMolesFreckles] = React.useState<number>(0);
+  const [molesFreckles, setMolesFreckles] = React.useState<number>(255);
   const [molesFrecklesOpacity, setMolesFrecklesOpacity] = React.useState<number>(1.0);
-  const [chestHair, setChestHair] = React.useState<number>(0);
+  const [chestHair, setChestHair] = React.useState<number>(255);
   const [chestHairOpacity, setChestHairOpacity] = React.useState<number>(1.0);
-  const [bodyBlemishes, setBodyBlemishes] = React.useState<number>(0);
+  const [bodyBlemishes, setBodyBlemishes] = React.useState<number>(255);
   const [bodyBlemishesOpacity, setBodyBlemishesOpacity] = React.useState<number>(1.0);
   const [lastChangedOverlay, setLastChangedOverlay] = React.useState<number>(0);
   const [opacitySlider, setOpacitySlider] = React.useState<number>(0);
+
+  const [overlayColorsOpen, setOverlayColorsOpen] = React.useState(false);
+  const [facialHairColor, setFacialHairColor] = React.useState<number>(0);
+  const [eyebrowsColor, setEyebrowsColor] = React.useState<number>(0);
+  const [blushColor, setBlushColor] = React.useState<number>(0);
+  const [lipstickColor, setLipstickColor] = React.useState<number>(0);
+  const [chestHairColor, setChestHairColor] = React.useState<number>(0);
 
   const opacitySetters = [
     setBlemishesOpacity,
@@ -70,7 +77,7 @@ function CharacterCreation(): JSX.Element {
     setBodyBlemishesOpacity,
   ];
 
-  const toggles = [setFaceOpen, setSkinOpen, setGenderOpen, setHairOpen, setOverlaysOpen];
+  const toggles = [setFaceOpen, setSkinOpen, setGenderOpen, setHairOpen, setOverlayOpen];
 
   const selectGender = (e: FormEvent, value: 'm' | 'f') => {
     e.preventDefault();
@@ -147,72 +154,108 @@ function CharacterCreation(): JSX.Element {
   React.useEffect(() => {
     setLastChangedOverlay(0);
     setOpacitySlider(blemishesOpacity);
+    if (data.overlay.blemishes[blemishes] == 'None') {
+      proxy.view.setHeadOverlay(0, 255, 0);
+    }
     proxy.view.setHeadOverlay(0, blemishes, blemishesOpacity);
   }, [blemishes, blemishesOpacity]);
 
   React.useEffect(() => {
     setLastChangedOverlay(1);
     setOpacitySlider(facialHairOpacity);
+    if (data.overlay.facialHair[facialHair] == 'None') {
+      proxy.view.setHeadOverlay(1, 255, 0);
+    }
     proxy.view.setHeadOverlay(1, facialHair, facialHairOpacity);
   }, [facialHair, facialHairOpacity]);
 
   React.useEffect(() => {
     setLastChangedOverlay(2);
     setOpacitySlider(eyebrowsOpacity);
+    if (data.overlay.eyebrows[eyebrows] == 'None') {
+      proxy.view.setHeadOverlay(2, 255, 0);
+    }
     proxy.view.setHeadOverlay(2, eyebrows, eyebrowsOpacity);
   }, [eyebrows, eyebrowsOpacity]);
 
   React.useEffect(() => {
     setLastChangedOverlay(3);
     setOpacitySlider(ageingOpacity);
+    if (data.overlay.ageing[ageing] == 'None') {
+      proxy.view.setHeadOverlay(3, 255, 0);
+    }
     proxy.view.setHeadOverlay(3, ageing, ageingOpacity);
   }, [ageing, ageingOpacity]);
 
   React.useEffect(() => {
     setLastChangedOverlay(4);
     setOpacitySlider(makeupOpacity);
+    if (data.overlay.makeup[makeup] == 'None') {
+      proxy.view.setHeadOverlay(4, 255, 0);
+    }
     proxy.view.setHeadOverlay(4, makeup, makeupOpacity);
   }, [makeup, makeupOpacity]);
 
   React.useEffect(() => {
     setLastChangedOverlay(5);
     setOpacitySlider(blushOpacity);
+    if (data.overlay.blush[blush] == 'None') {
+      proxy.view.setHeadOverlay(5, 255, 0);
+    }
     proxy.view.setHeadOverlay(5, blush, blushOpacity);
   }, [blush, blushOpacity]);
 
   React.useEffect(() => {
     setLastChangedOverlay(6);
     setOpacitySlider(complexionOpacity);
+    if (data.overlay.complexion[complexion] == 'None') {
+      proxy.view.setHeadOverlay(6, 255, 0);
+    }
     proxy.view.setHeadOverlay(6, complexion, complexionOpacity);
   }, [complexion, complexionOpacity]);
 
   React.useEffect(() => {
     setLastChangedOverlay(7);
     setOpacitySlider(sunDamageOpacity);
+    if (data.overlay.sunDamage[sunDamage] == 'None') {
+      proxy.view.setHeadOverlay(7, 255, 0);
+    }
     proxy.view.setHeadOverlay(7, sunDamage, sunDamageOpacity);
   }, [sunDamage, sunDamageOpacity]);
 
   React.useEffect(() => {
     setLastChangedOverlay(8);
     setOpacitySlider(lipstickOpacity);
+    if (data.overlay.lipstick[lipstick] == 'None') {
+      proxy.view.setHeadOverlay(8, 255, 0);
+    }
     proxy.view.setHeadOverlay(8, lipstick, lipstickOpacity);
   }, [lipstick, lipstickOpacity]);
 
   React.useEffect(() => {
     setLastChangedOverlay(9);
     setOpacitySlider(molesFrecklesOpacity);
+    if (data.overlay.molesFreckles[molesFreckles] == 'None') {
+      proxy.view.setHeadOverlay(9, 255, 0);
+    }
     proxy.view.setHeadOverlay(9, molesFreckles, molesFrecklesOpacity);
   }, [molesFreckles, molesFrecklesOpacity]);
 
   React.useEffect(() => {
     setLastChangedOverlay(10);
     setOpacitySlider(chestHairOpacity);
+    if (data.overlay.chestHair[chestHair] == 'None') {
+      proxy.view.setHeadOverlay(10, 255, 0);
+    }
     proxy.view.setHeadOverlay(10, chestHair, chestHairOpacity);
   }, [chestHair, chestHairOpacity]);
 
   React.useEffect(() => {
     setLastChangedOverlay(11);
     setOpacitySlider(bodyBlemishesOpacity);
+    if (data.overlay.bodyBlemishes[bodyBlemishes] == 'None') {
+      proxy.view.setHeadOverlay(11, 255, 0);
+    }
     proxy.view.setHeadOverlay(11, bodyBlemishes, bodyBlemishesOpacity);
   }, [bodyBlemishes, bodyBlemishesOpacity]);
 
@@ -281,23 +324,23 @@ function CharacterCreation(): JSX.Element {
                 index: hairStyle,
               },
               Color: {
-                left: () => scroll(setHairColor, data.hair.colors, -1),
-                right: () => scroll(setHairColor, data.hair.colors, +1),
-                values: data.hair.colors,
+                left: () => scroll(setHairColor, data.colors, -1),
+                right: () => scroll(setHairColor, data.colors, +1),
+                values: data.colors,
                 index: hairColor,
               },
               Highlights: {
-                left: () => scroll(setHairHighlight, data.hair.colors, -1),
-                right: () => scroll(setHairHighlight, data.hair.colors, +1),
-                values: data.hair.colors,
+                left: () => scroll(setHairHighlight, data.colors, -1),
+                right: () => scroll(setHairHighlight, data.colors, +1),
+                values: data.colors,
                 index: hairHighlight,
               },
             }}
           />
           <CollapsableArrowSelectItem
-            primary={'OVERLAYS'}
-            onClick={() => toggle(setOverlaysOpen)}
-            open={overlaysOpen}
+            primary={'OVERLAY'}
+            onClick={() => toggle(setOverlayOpen)}
+            open={overlayOpen}
             slidersFirst={true}
             selects={{
               Blemishes: {
@@ -374,6 +417,44 @@ function CharacterCreation(): JSX.Element {
               },
             }}
             sliders={[{ onChange: onOverlayOpacity, value: opacitySlider }]}
+          />
+          <CollapsableArrowSelectItem
+            primary={'OVERLAY COLORS'}
+            onClick={() => toggle(setOverlayColorsOpen)}
+            open={overlayColorsOpen}
+            slidersFirst={true}
+            selects={{
+              'Facial Hair': {
+                left: () => scroll(setFacialHairColor, data.colors, -1),
+                right: () => scroll(setFacialHairColor, data.colors, +1),
+                values: data.colors,
+                index: facialHairColor,
+              },
+              Eyebrows: {
+                left: () => scroll(setEyebrowsColor, data.colors, -1),
+                right: () => scroll(setEyebrowsColor, data.colors, +1),
+                values: data.colors,
+                index: eyebrowsColor,
+              },
+              Blush: {
+                left: () => scroll(setBlushColor, data.colors, -1),
+                right: () => scroll(setBlushColor, data.colors, +1),
+                values: data.colors,
+                index: blushColor,
+              },
+              Lipstick: {
+                left: () => scroll(setLipstickColor, data.colors, -1),
+                right: () => scroll(setLipstickColor, data.colors, +1),
+                values: data.colors,
+                index: lipstickColor,
+              },
+              'Chest Hair': {
+                left: () => scroll(setChestHairColor, data.colors, -1),
+                right: () => scroll(setChestHairColor, data.colors, +1),
+                values: data.colors,
+                index: chestHairColor,
+              },
+            }}
           />
         </List>
       </CreationNav>
