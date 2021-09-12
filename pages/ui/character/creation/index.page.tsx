@@ -7,6 +7,8 @@ import React, { ChangeEvent, FormEvent } from 'react';
 import { CreationNav } from '../styles';
 
 function CharacterCreation(): JSX.Element {
+  const enableMakeup = false;
+
   const [fatherFace, setFatherFace] = React.useState<number>(0);
   const [motherFace, setMotherFace] = React.useState<number>(0);
   const [faceMix, setFaceMix] = React.useState<number>(0.5);
@@ -30,37 +32,50 @@ function CharacterCreation(): JSX.Element {
   const [overlayOpen, setOverlayOpen] = React.useState(false);
   const [blemishes, setBlemishes] = React.useState<number>(255);
   const [blemishesOpacity, setBlemishesOpacity] = React.useState<number>(1.0);
-  const [facialHair, setFacialHair] = React.useState<number>(255);
-  const [facialHairOpacity, setFacialHairOpacity] = React.useState<number>(1.0);
-  const [eyebrows, setEyebrows] = React.useState<number>(255);
-  const [eyebrowsOpacity, setEyebrowsOpacity] = React.useState<number>(1.0);
   const [ageing, setAgeing] = React.useState<number>(255);
   const [ageingOpacity, setAgeingOpacity] = React.useState<number>(1.0);
   const [makeup, setMakeup] = React.useState<number>(255);
   const [makeupOpacity, setMakeupOpacity] = React.useState<number>(1.0);
-  const [blush, setBlush] = React.useState<number>(255);
-  const [blushOpacity, setBlushOpacity] = React.useState<number>(1.0);
   const [complexion, setComplexion] = React.useState<number>(255);
   const [complexionOpacity, setComplexionOpacity] = React.useState<number>(1.0);
   const [sunDamage, setSunDamage] = React.useState<number>(255);
   const [sunDamageOpacity, setSunDamageOpacity] = React.useState<number>(1.0);
-  const [lipstick, setLipstick] = React.useState<number>(255);
-  const [lipstickOpacity, setLipstickOpacity] = React.useState<number>(1.0);
   const [molesFreckles, setMolesFreckles] = React.useState<number>(255);
   const [molesFrecklesOpacity, setMolesFrecklesOpacity] = React.useState<number>(1.0);
-  const [chestHair, setChestHair] = React.useState<number>(255);
-  const [chestHairOpacity, setChestHairOpacity] = React.useState<number>(1.0);
   const [bodyBlemishes, setBodyBlemishes] = React.useState<number>(255);
   const [bodyBlemishesOpacity, setBodyBlemishesOpacity] = React.useState<number>(1.0);
   const [lastChangedOverlay, setLastChangedOverlay] = React.useState<number>(0);
   const [opacitySlider, setOpacitySlider] = React.useState<number>(0);
 
-  const [overlayColorsOpen, setOverlayColorsOpen] = React.useState(false);
+  const [facialHairOpen, setFacialHairOpen] = React.useState(false);
+  const [facialHair, setFacialHair] = React.useState<number>(255);
+  const [facialHairOpacity, setFacialHairOpacity] = React.useState<number>(1.0);
   const [facialHairColor, setFacialHairColor] = React.useState<number>(0);
+  const [facialHairHighlight, setFacialHairHighlight] = React.useState<number>(0);
+
+  const [eyebrowsOpen, setEyebrowsOpen] = React.useState(false);
+  const [eyebrows, setEyebrows] = React.useState<number>(255);
+  const [eyebrowsOpacity, setEyebrowsOpacity] = React.useState<number>(1.0);
   const [eyebrowsColor, setEyebrowsColor] = React.useState<number>(0);
+  const [eyebrowsHighlight, setEyebrowsHighlight] = React.useState<number>(0);
+
+  const [blushOpen, setBlushOpen] = React.useState(false);
+  const [blush, setBlush] = React.useState<number>(255);
+  const [blushOpacity, setBlushOpacity] = React.useState<number>(1.0);
   const [blushColor, setBlushColor] = React.useState<number>(0);
+  const [blushHighlight, setBlushHighlight] = React.useState<number>(0);
+
+  const [lipstickOpen, setLipstickOpen] = React.useState(false);
+  const [lipstick, setLipstick] = React.useState<number>(255);
+  const [lipstickOpacity, setLipstickOpacity] = React.useState<number>(1.0);
   const [lipstickColor, setLipstickColor] = React.useState<number>(0);
+  const [lipstickHighlight, setLipstickHighlight] = React.useState<number>(0);
+
+  const [chestHairOpen, setChestHairOpen] = React.useState(false);
+  const [chestHair, setChestHair] = React.useState<number>(255);
+  const [chestHairOpacity, setChestHairOpacity] = React.useState<number>(1.0);
   const [chestHairColor, setChestHairColor] = React.useState<number>(0);
+  const [chestHairHighlight, setChestHairHighlight] = React.useState<number>(0);
 
   const opacitySetters = [
     setBlemishesOpacity,
@@ -77,7 +92,18 @@ function CharacterCreation(): JSX.Element {
     setBodyBlemishesOpacity,
   ];
 
-  const toggles = [setFaceOpen, setSkinOpen, setGenderOpen, setHairOpen, setOverlayOpen];
+  const toggles = [
+    setFaceOpen,
+    setSkinOpen,
+    setGenderOpen,
+    setHairOpen,
+    setOverlayOpen,
+    setFacialHairOpen,
+    setEyebrowsOpen,
+    setBlushOpen,
+    setLipstickOpen,
+    setChestHairOpen,
+  ];
 
   const selectGender = (e: FormEvent, value: 'm' | 'f') => {
     e.preventDefault();
@@ -119,9 +145,13 @@ function CharacterCreation(): JSX.Element {
     });
   };
 
-  const onOverlayOpacity = (e: ChangeEvent, value: number | number[]) => {
+  const onOverlayOpacity = (e: ChangeEvent, value: number | number[], overlay?: number) => {
     e.preventDefault();
-    opacitySetters[lastChangedOverlay](value as number);
+    if (overlay) {
+      opacitySetters[overlay](value as number);
+    } else {
+      opacitySetters[lastChangedOverlay](value as number);
+    }
   };
 
   React.useEffect(() => {
@@ -166,8 +196,8 @@ function CharacterCreation(): JSX.Element {
     if (data.overlay.facialHair[facialHair] == 'None') {
       proxy.view.setHeadOverlay(1, 255, 0);
     }
-    proxy.view.setHeadOverlay(1, facialHair, facialHairOpacity);
-  }, [facialHair, facialHairOpacity]);
+    proxy.view.setHeadOverlay(1, facialHair, facialHairOpacity, facialHairColor, facialHairHighlight);
+  }, [facialHair, facialHairOpacity, facialHairColor, facialHairHighlight]);
 
   React.useEffect(() => {
     setLastChangedOverlay(2);
@@ -175,8 +205,8 @@ function CharacterCreation(): JSX.Element {
     if (data.overlay.eyebrows[eyebrows] == 'None') {
       proxy.view.setHeadOverlay(2, 255, 0);
     }
-    proxy.view.setHeadOverlay(2, eyebrows, eyebrowsOpacity);
-  }, [eyebrows, eyebrowsOpacity]);
+    proxy.view.setHeadOverlay(2, eyebrows, eyebrowsOpacity, eyebrowsColor, eyebrowsHighlight);
+  }, [eyebrows, eyebrowsOpacity, eyebrowsColor, eyebrowsHighlight]);
 
   React.useEffect(() => {
     setLastChangedOverlay(3);
@@ -202,8 +232,8 @@ function CharacterCreation(): JSX.Element {
     if (data.overlay.blush[blush] == 'None') {
       proxy.view.setHeadOverlay(5, 255, 0);
     }
-    proxy.view.setHeadOverlay(5, blush, blushOpacity);
-  }, [blush, blushOpacity]);
+    proxy.view.setHeadOverlay(5, blush, blushOpacity, blushColor, blushHighlight);
+  }, [blush, blushOpacity, blushColor, blushHighlight]);
 
   React.useEffect(() => {
     setLastChangedOverlay(6);
@@ -229,8 +259,8 @@ function CharacterCreation(): JSX.Element {
     if (data.overlay.lipstick[lipstick] == 'None') {
       proxy.view.setHeadOverlay(8, 255, 0);
     }
-    proxy.view.setHeadOverlay(8, lipstick, lipstickOpacity);
-  }, [lipstick, lipstickOpacity]);
+    proxy.view.setHeadOverlay(8, lipstick, lipstickOpacity, lipstickColor, lipstickHighlight);
+  }, [lipstick, lipstickOpacity, lipstickColor, lipstickHighlight]);
 
   React.useEffect(() => {
     setLastChangedOverlay(9);
@@ -247,8 +277,8 @@ function CharacterCreation(): JSX.Element {
     if (data.overlay.chestHair[chestHair] == 'None') {
       proxy.view.setHeadOverlay(10, 255, 0);
     }
-    proxy.view.setHeadOverlay(10, chestHair, chestHairOpacity);
-  }, [chestHair, chestHairOpacity]);
+    proxy.view.setHeadOverlay(10, chestHair, chestHairOpacity, chestHairColor, chestHairHighlight);
+  }, [chestHair, chestHairOpacity, chestHairColor, chestHairHighlight]);
 
   React.useEffect(() => {
     setLastChangedOverlay(11);
@@ -348,113 +378,197 @@ function CharacterCreation(): JSX.Element {
                 right: () => scroll(setBlemishes, data.overlay.blemishes, +1),
                 values: data.overlay.blemishes,
                 index: blemishes,
-              },
-              'Facial Hair': {
-                left: () => scroll(setFacialHair, data.overlay.facialHair, -1),
-                right: () => scroll(setFacialHair, data.overlay.facialHair, +1),
-                values: data.overlay.facialHair,
-                index: facialHair,
-              },
-              Eyebrows: {
-                left: () => scroll(setEyebrows, data.overlay.eyebrows, -1),
-                right: () => scroll(setEyebrows, data.overlay.eyebrows, +1),
-                values: data.overlay.eyebrows,
-                index: eyebrows,
+                none: 'None',
               },
               Ageing: {
                 left: () => scroll(setAgeing, data.overlay.ageing, -1),
                 right: () => scroll(setAgeing, data.overlay.ageing, +1),
                 values: data.overlay.ageing,
                 index: ageing,
+                none: 'None',
               },
               Makeup: {
                 left: () => scroll(setMakeup, data.overlay.makeup, -1),
                 right: () => scroll(setMakeup, data.overlay.makeup, +1),
                 values: data.overlay.makeup,
                 index: makeup,
-              },
-              Blush: {
-                left: () => scroll(setBlush, data.overlay.blush, -1),
-                right: () => scroll(setBlush, data.overlay.blush, +1),
-                values: data.overlay.blush,
-                index: blush,
+                none: 'None',
+                disabled: !enableMakeup,
               },
               Complexion: {
                 left: () => scroll(setComplexion, data.overlay.complexion, -1),
                 right: () => scroll(setComplexion, data.overlay.complexion, +1),
                 values: data.overlay.complexion,
                 index: complexion,
+                none: 'None',
               },
               'Sun Damage': {
                 left: () => scroll(setSunDamage, data.overlay.sunDamage, -1),
                 right: () => scroll(setSunDamage, data.overlay.sunDamage, +1),
                 values: data.overlay.sunDamage,
                 index: sunDamage,
-              },
-              Lipstick: {
-                left: () => scroll(setLipstick, data.overlay.lipstick, -1),
-                right: () => scroll(setLipstick, data.overlay.lipstick, +1),
-                values: data.overlay.lipstick,
-                index: lipstick,
+                none: 'None',
               },
               'Moles & Freckles': {
                 left: () => scroll(setMolesFreckles, data.overlay.molesFreckles, -1),
                 right: () => scroll(setMolesFreckles, data.overlay.molesFreckles, +1),
                 values: data.overlay.molesFreckles,
                 index: molesFreckles,
-              },
-              'Chest Hair': {
-                left: () => scroll(setChestHair, data.overlay.chestHair, -1),
-                right: () => scroll(setChestHair, data.overlay.chestHair, +1),
-                values: data.overlay.chestHair,
-                index: chestHair,
+                none: 'None',
               },
               'Body Blemishes': {
                 left: () => scroll(setBodyBlemishes, data.overlay.bodyBlemishes, -1),
                 right: () => scroll(setBodyBlemishes, data.overlay.bodyBlemishes, +1),
                 values: data.overlay.bodyBlemishes,
                 index: bodyBlemishes,
+                none: 'None',
               },
             }}
             sliders={[{ onChange: onOverlayOpacity, value: opacitySlider }]}
           />
           <CollapsableArrowSelectItem
-            primary={'OVERLAY COLORS'}
-            onClick={() => toggle(setOverlayColorsOpen)}
-            open={overlayColorsOpen}
+            primary={'FACIAL HAIR'}
+            onClick={() => toggle(setFacialHairOpen)}
+            open={facialHairOpen}
             slidersFirst={true}
             selects={{
-              'Facial Hair': {
+              Style: {
+                left: () => scroll(setFacialHair, data.overlay.facialHair, -1),
+                right: () => scroll(setFacialHair, data.overlay.facialHair, +1),
+                values: data.overlay.facialHair,
+                index: facialHair,
+                none: 'None',
+              },
+              Color: {
                 left: () => scroll(setFacialHairColor, data.colors, -1),
                 right: () => scroll(setFacialHairColor, data.colors, +1),
                 values: data.colors,
                 index: facialHairColor,
               },
-              Eyebrows: {
+              Highlight: {
+                left: () => scroll(setFacialHairHighlight, data.colors, -1),
+                right: () => scroll(setFacialHairHighlight, data.colors, +1),
+                values: data.colors,
+                index: facialHairHighlight,
+              },
+            }}
+            sliders={[{ onChange: (e, v) => onOverlayOpacity(e, v, 1), value: facialHairOpacity }]}
+          />
+          <CollapsableArrowSelectItem
+            primary={'EYEBROWS'}
+            onClick={() => toggle(setEyebrowsOpen)}
+            open={eyebrowsOpen}
+            slidersFirst={true}
+            selects={{
+              Style: {
+                left: () => scroll(setEyebrows, data.overlay.eyebrows, -1),
+                right: () => scroll(setEyebrows, data.overlay.eyebrows, +1),
+                values: data.overlay.eyebrows,
+                index: eyebrows,
+                none: 'None',
+              },
+              Color: {
                 left: () => scroll(setEyebrowsColor, data.colors, -1),
                 right: () => scroll(setEyebrowsColor, data.colors, +1),
                 values: data.colors,
                 index: eyebrowsColor,
               },
-              Blush: {
-                left: () => scroll(setBlushColor, data.colors, -1),
-                right: () => scroll(setBlushColor, data.colors, +1),
+              Highlight: {
+                left: () => scroll(setEyebrowsHighlight, data.colors, -1),
+                right: () => scroll(setEyebrowsHighlight, data.colors, +1),
                 values: data.colors,
-                index: blushColor,
+                index: eyebrowsHighlight,
               },
-              Lipstick: {
-                left: () => scroll(setLipstickColor, data.colors, -1),
-                right: () => scroll(setLipstickColor, data.colors, +1),
-                values: data.colors,
-                index: lipstickColor,
+            }}
+            sliders={[{ onChange: (e, v) => onOverlayOpacity(e, v, 2), value: eyebrowsOpacity }]}
+          />
+          {enableMakeup && (
+            <CollapsableArrowSelectItem
+              primary={'BLUSH'}
+              onClick={() => toggle(setBlushOpen)}
+              open={blushOpen}
+              slidersFirst={true}
+              selects={{
+                Style: {
+                  left: () => scroll(setBlush, data.overlay.blush, -1),
+                  right: () => scroll(setBlush, data.overlay.blush, +1),
+                  values: data.overlay.blush,
+                  index: blush,
+                  none: 'None',
+                },
+                Color: {
+                  left: () => scroll(setBlushColor, data.colors, -1),
+                  right: () => scroll(setBlushColor, data.colors, +1),
+                  values: data.colors,
+                  index: blushColor,
+                },
+                Highlight: {
+                  left: () => scroll(setBlushHighlight, data.colors, -1),
+                  right: () => scroll(setBlushHighlight, data.colors, +1),
+                  values: data.colors,
+                  index: blushHighlight,
+                },
+              }}
+              sliders={[{ onChange: (e, v) => onOverlayOpacity(e, v, 5), value: blushOpacity }]}
+            />
+          )}
+          {enableMakeup && (
+            <CollapsableArrowSelectItem
+              primary={'LIPSTICK'}
+              onClick={() => toggle(setLipstickOpen)}
+              open={lipstickOpen}
+              slidersFirst={true}
+              selects={{
+                Style: {
+                  left: () => scroll(setLipstick, data.overlay.lipstick, -1),
+                  right: () => scroll(setLipstick, data.overlay.lipstick, +1),
+                  values: data.overlay.lipstick,
+                  index: lipstick,
+                  none: 'None',
+                },
+                Color: {
+                  left: () => scroll(setLipstickColor, data.colors, -1),
+                  right: () => scroll(setLipstickColor, data.colors, +1),
+                  values: data.colors,
+                  index: lipstickColor,
+                },
+                Highlight: {
+                  left: () => scroll(setLipstickHighlight, data.colors, -1),
+                  right: () => scroll(setLipstickHighlight, data.colors, +1),
+                  values: data.colors,
+                  index: lipstickHighlight,
+                },
+              }}
+              sliders={[{ onChange: (e, v) => onOverlayOpacity(e, v, 8), value: lipstickOpacity }]}
+            />
+          )}
+          <CollapsableArrowSelectItem
+            primary={'CHEST HAIR'}
+            onClick={() => toggle(setChestHairOpen)}
+            open={chestHairOpen}
+            slidersFirst={true}
+            selects={{
+              Style: {
+                left: () => scroll(setChestHair, data.overlay.chestHair, -1),
+                right: () => scroll(setChestHair, data.overlay.chestHair, +1),
+                values: data.overlay.chestHair,
+                index: chestHair,
+                none: 'None',
               },
-              'Chest Hair': {
+              Color: {
                 left: () => scroll(setChestHairColor, data.colors, -1),
                 right: () => scroll(setChestHairColor, data.colors, +1),
                 values: data.colors,
                 index: chestHairColor,
               },
+              Highlight: {
+                left: () => scroll(setChestHairHighlight, data.colors, -1),
+                right: () => scroll(setChestHairHighlight, data.colors, +1),
+                values: data.colors,
+                index: chestHairHighlight,
+              },
             }}
+            sliders={[{ onChange: (e, v) => onOverlayOpacity(e, v, 10), value: chestHairOpacity }]}
           />
         </List>
       </CreationNav>

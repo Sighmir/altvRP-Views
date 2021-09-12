@@ -14,6 +14,8 @@ export interface CollapsableArrowSelectItemProps {
       right: (...any: any) => void;
       index: number;
       values: string[];
+      none?: string;
+      disabled?: boolean;
     };
   };
   sliders?: [
@@ -46,6 +48,10 @@ function mapSliders(sliders: CollapsableArrowSelectItemProps['sliders']) {
     : [];
 }
 
+function getValue(values: string[], index: number, none = '') {
+  return values[index] ? values[index] : none;
+}
+
 function CollapsableArrowSelectItem(props: CollapsableArrowSelectItemProps): JSX.Element {
   const { onClick, open, primary, selects, sliders, slidersFirst } = props;
   return (
@@ -57,20 +63,23 @@ function CollapsableArrowSelectItem(props: CollapsableArrowSelectItemProps): JSX
       <Collapse component="li" in={open} timeout="auto" unmountOnExit>
         <List disablePadding>
           {slidersFirst ? mapSliders(sliders) : []}
-          {Object.keys(selects).map((key) => (
-            <ListItem key={key}>
-              <ListItemText primary={key} />
-              <ArrowSelect variant="text" color="primary" aria-label="text primary button group">
-                <Button onClick={selects[key].left}>
-                  <ArrowLeft></ArrowLeft>
-                </Button>
-                <Button disabled>{selects[key].values[selects[key].index]}</Button>
-                <Button onClick={selects[key].right}>
-                  <ArrowRight></ArrowRight>
-                </Button>
-              </ArrowSelect>
-            </ListItem>
-          ))}
+          {Object.keys(selects).map(
+            (key) =>
+              !selects[key].disabled && (
+                <ListItem key={key}>
+                  <ListItemText primary={key} />
+                  <ArrowSelect variant="text" color="primary" aria-label="text primary button group">
+                    <Button onClick={selects[key].left}>
+                      <ArrowLeft></ArrowLeft>
+                    </Button>
+                    <Button disabled>{getValue(selects[key].values, selects[key].index, selects[key].none)}</Button>
+                    <Button onClick={selects[key].right}>
+                      <ArrowRight></ArrowRight>
+                    </Button>
+                  </ArrowSelect>
+                </ListItem>
+              ),
+          )}
           {!slidersFirst ? mapSliders(sliders) : []}
         </List>
       </Collapse>
