@@ -1,4 +1,4 @@
-import { ButtonGroup } from '@material-ui/core';
+import { ButtonGroup, Slider } from '@material-ui/core';
 import styled from 'styled-components';
 
 export const ArrowSelect = styled(ButtonGroup)`
@@ -6,6 +6,13 @@ export const ArrowSelect = styled(ButtonGroup)`
   & .MuiButton-root.Mui-disabled {
     text-transform: uppercase;
     color: black;
+    width: 100px;
+  }
+`;
+
+export const SliderItem = styled(Slider)`
+  && {
+    right: 0px;
     width: 100px;
   }
 `;

@@ -20,6 +20,7 @@ export interface CollapsableArrowSelectItemProps {
   };
   sliders?: [
     {
+      primary?: string;
       value?: number;
       min?: number;
       max?: number;
@@ -34,6 +35,7 @@ function mapSliders(sliders: CollapsableArrowSelectItemProps['sliders']) {
   return sliders
     ? sliders.map((s, i) => (
         <ListItem key={'slider' + i}>
+          {s.primary ? <ListItemText primary={s.primary} /> : []}
           <Slider
             value={s.value}
             defaultValue={s.default || ((s.max || 1) - (s.min || 0)) / 2}

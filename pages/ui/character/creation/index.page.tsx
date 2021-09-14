@@ -1,6 +1,7 @@
 import { List } from '@material-ui/core';
 import CollapsableArrowSelectItem from 'components/CollapsableArrowSelectItem';
 import CollapsableButtonsItem from 'components/CollapsableButtonsItem';
+import CollapsableSliderItem from 'components/CollapsableSliderItem';
 import data from 'data/characters';
 import * as proxy from 'modules/proxy';
 import React, { ChangeEvent, FormEvent } from 'react';
@@ -28,6 +29,10 @@ function CharacterCreation(): JSX.Element {
   const [hairHighlight, setHairHighlight] = React.useState<number>(0);
   const [hairOpen, setHairOpen] = React.useState(false);
   const ignoredHairs = ['Night Vision'];
+
+  const [eyesOpen, setEyesOpen] = React.useState(false);
+  const [eyesColor, setEyesColor] = React.useState<number>(0);
+  const defaultEyes = data.eyes.slice(0, 15);
 
   const [overlayOpen, setOverlayOpen] = React.useState(false);
   const [blemishes, setBlemishes] = React.useState<number>(255);
@@ -77,6 +82,51 @@ function CharacterCreation(): JSX.Element {
   const [chestHairColor, setChestHairColor] = React.useState<number>(0);
   const [chestHairHighlight, setChestHairHighlight] = React.useState<number>(0);
 
+  const [facialFeaturesOpen, setFacialFeaturesOpen] = React.useState(false);
+  const [noseWidth, setNoseWidth] = React.useState<number>(0);
+  const [nosePeakHeight, setNosePeakHeight] = React.useState<number>(0);
+  const [nosePeakLength, setNosePeakLength] = React.useState<number>(0);
+  const [noseBoneHeight, setNoseBoneHeight] = React.useState<number>(0);
+  const [nosePeakLowering, setNosePeakLowering] = React.useState<number>(0);
+  const [noseBoneTwist, setNoseBoneTwist] = React.useState<number>(0);
+  const [eyebrowHeight, setEyebrowHeight] = React.useState<number>(0);
+  const [eyebrowForward, setEyebrowForward] = React.useState<number>(0);
+  const [cheeksBoneHeight, setCheeksBoneHeight] = React.useState<number>(0);
+  const [cheeksBoneWidth, setCheeksBoneWidth] = React.useState<number>(0);
+  const [cheeksWidth, setCheeksWidth] = React.useState<number>(0);
+  const [eyesOpening, setEyesOpening] = React.useState<number>(0);
+  const [lipsThickness, setLipsThickness] = React.useState<number>(0);
+  const [jawBoneWidth, setJawBoneWidth] = React.useState<number>(0);
+  const [jawBoneBackLength, setJawBoneBackLength] = React.useState<number>(0);
+  const [chimpBoneLowering, setChimpBoneLowering] = React.useState<number>(0);
+  const [chimpBoneLength, setChimpBoneLength] = React.useState<number>(0);
+  const [chimpBoneWidth, setChimpBoneWidth] = React.useState<number>(0);
+  const [chimpHole, setChimpHole] = React.useState<number>(0);
+  const [neckThickness, setNeckThickness] = React.useState<number>(0);
+
+  const facialFeatureSetters = [
+    setNoseWidth,
+    setNosePeakHeight,
+    setNosePeakLength,
+    setNoseBoneHeight,
+    setNosePeakLowering,
+    setNoseBoneTwist,
+    setEyebrowHeight,
+    setEyebrowForward,
+    setCheeksBoneHeight,
+    setCheeksBoneWidth,
+    setCheeksWidth,
+    setEyesOpening,
+    setLipsThickness,
+    setJawBoneWidth,
+    setJawBoneBackLength,
+    setChimpBoneLowering,
+    setChimpBoneLength,
+    setChimpBoneWidth,
+    setChimpHole,
+    setNeckThickness,
+  ];
+
   const opacitySetters = [
     setBlemishesOpacity,
     setFacialHairOpacity,
@@ -103,6 +153,7 @@ function CharacterCreation(): JSX.Element {
     setBlushOpen,
     setLipstickOpen,
     setChestHairOpen,
+    setFacialFeaturesOpen,
   ];
 
   const selectGender = (e: FormEvent, value: 'm' | 'f') => {
@@ -145,13 +196,18 @@ function CharacterCreation(): JSX.Element {
     });
   };
 
-  const onOverlayOpacity = (e: ChangeEvent, value: number | number[], overlay?: number) => {
+  const onOverlayOpacityChange = (e: ChangeEvent, value: number | number[], overlay?: number) => {
     e.preventDefault();
     if (overlay) {
       opacitySetters[overlay](value as number);
     } else {
       opacitySetters[lastChangedOverlay](value as number);
     }
+  };
+
+  const onFacialFeatureChange = (e: ChangeEvent, value: number | number[], id: number) => {
+    e.preventDefault();
+    facialFeatureSetters[id](value as number);
   };
 
   React.useEffect(() => {
@@ -289,6 +345,90 @@ function CharacterCreation(): JSX.Element {
     proxy.view.setHeadOverlay(11, bodyBlemishes, bodyBlemishesOpacity);
   }, [bodyBlemishes, bodyBlemishesOpacity]);
 
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(0, noseWidth);
+  }, [noseWidth]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(1, nosePeakHeight);
+  }, [nosePeakHeight]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(2, nosePeakLength);
+  }, [nosePeakLength]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(3, noseBoneHeight);
+  }, [noseBoneHeight]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(4, nosePeakLowering);
+  }, [nosePeakLowering]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(5, noseBoneTwist);
+  }, [noseBoneTwist]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(6, eyebrowHeight);
+  }, [eyebrowHeight]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(7, eyebrowForward);
+  }, [eyebrowForward]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(8, cheeksBoneHeight);
+  }, [cheeksBoneHeight]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(9, cheeksBoneWidth);
+  }, [cheeksBoneWidth]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(10, cheeksWidth);
+  }, [cheeksWidth]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(11, eyesOpening);
+  }, [eyesOpening]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(12, lipsThickness);
+  }, [lipsThickness]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(13, jawBoneWidth);
+  }, [jawBoneWidth]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(14, jawBoneBackLength);
+  }, [jawBoneBackLength]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(15, chimpBoneLowering);
+  }, [chimpBoneLowering]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(16, chimpBoneLength);
+  }, [chimpBoneLength]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(17, chimpBoneWidth);
+  }, [chimpBoneWidth]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(18, chimpHole);
+  }, [chimpHole]);
+
+  React.useEffect(() => {
+    proxy.view.setFaceFeature(19, neckThickness);
+  }, [neckThickness]);
+
+  React.useEffect(() => {
+    proxy.view.setEyesColor(eyesColor);
+  }, [eyesColor]);
+
   return (
     <div>
       <CreationNav>
@@ -368,6 +508,19 @@ function CharacterCreation(): JSX.Element {
             }}
           />
           <CollapsableArrowSelectItem
+            primary={'EYES'}
+            onClick={() => toggle(setEyesOpen)}
+            open={eyesOpen}
+            selects={{
+              Color: {
+                left: () => scroll(setEyesColor, defaultEyes, -1),
+                right: () => scroll(setEyesColor, defaultEyes, +1),
+                values: defaultEyes,
+                index: eyesColor,
+              },
+            }}
+          />
+          <CollapsableArrowSelectItem
             primary={'OVERLAY'}
             onClick={() => toggle(setOverlayOpen)}
             open={overlayOpen}
@@ -424,7 +577,7 @@ function CharacterCreation(): JSX.Element {
                 none: 'None',
               },
             }}
-            sliders={[{ onChange: onOverlayOpacity, value: opacitySlider }]}
+            sliders={[{ onChange: onOverlayOpacityChange, value: opacitySlider }]}
           />
           <CollapsableArrowSelectItem
             primary={'FACIAL HAIR'}
@@ -452,7 +605,7 @@ function CharacterCreation(): JSX.Element {
                 index: facialHairHighlight,
               },
             }}
-            sliders={[{ onChange: (e, v) => onOverlayOpacity(e, v, 1), value: facialHairOpacity }]}
+            sliders={[{ onChange: (e, v) => onOverlayOpacityChange(e, v, 1), value: facialHairOpacity }]}
           />
           <CollapsableArrowSelectItem
             primary={'EYEBROWS'}
@@ -480,7 +633,7 @@ function CharacterCreation(): JSX.Element {
                 index: eyebrowsHighlight,
               },
             }}
-            sliders={[{ onChange: (e, v) => onOverlayOpacity(e, v, 2), value: eyebrowsOpacity }]}
+            sliders={[{ onChange: (e, v) => onOverlayOpacityChange(e, v, 2), value: eyebrowsOpacity }]}
           />
           {enableMakeup && (
             <CollapsableArrowSelectItem
@@ -509,7 +662,7 @@ function CharacterCreation(): JSX.Element {
                   index: blushHighlight,
                 },
               }}
-              sliders={[{ onChange: (e, v) => onOverlayOpacity(e, v, 5), value: blushOpacity }]}
+              sliders={[{ onChange: (e, v) => onOverlayOpacityChange(e, v, 5), value: blushOpacity }]}
             />
           )}
           {enableMakeup && (
@@ -539,7 +692,7 @@ function CharacterCreation(): JSX.Element {
                   index: lipstickHighlight,
                 },
               }}
-              sliders={[{ onChange: (e, v) => onOverlayOpacity(e, v, 8), value: lipstickOpacity }]}
+              sliders={[{ onChange: (e, v) => onOverlayOpacityChange(e, v, 8), value: lipstickOpacity }]}
             />
           )}
           <CollapsableArrowSelectItem
@@ -568,7 +721,34 @@ function CharacterCreation(): JSX.Element {
                 index: chestHairHighlight,
               },
             }}
-            sliders={[{ onChange: (e, v) => onOverlayOpacity(e, v, 10), value: chestHairOpacity }]}
+            sliders={[{ onChange: (e, v) => onOverlayOpacityChange(e, v, 10), value: chestHairOpacity }]}
+          />
+          <CollapsableSliderItem
+            primary={'FEATURES'}
+            onClick={() => toggle(setFacialFeaturesOpen)}
+            open={facialFeaturesOpen}
+            sliders={{
+              'Nose Width': { onChange: (e, v) => onFacialFeatureChange(e, v, 0), min: -1, max: 1 },
+              'Nose Peak Height': { onChange: (e, v) => onFacialFeatureChange(e, v, 1), min: -1, max: 1 },
+              'Nose Peak Length': { onChange: (e, v) => onFacialFeatureChange(e, v, 2), min: -1, max: 1 },
+              'Nose Bone Height': { onChange: (e, v) => onFacialFeatureChange(e, v, 3), min: -1, max: 1 },
+              'Nose Peak Lowering': { onChange: (e, v) => onFacialFeatureChange(e, v, 4), min: -1, max: 1 },
+              'Nose Bone Twist': { onChange: (e, v) => onFacialFeatureChange(e, v, 5), min: -1, max: 1 },
+              'Eyebrow Height': { onChange: (e, v) => onFacialFeatureChange(e, v, 6), min: -1, max: 1 },
+              'Eyebrow Forward': { onChange: (e, v) => onFacialFeatureChange(e, v, 7), min: -1, max: 1 },
+              'Cheeks Bone Height': { onChange: (e, v) => onFacialFeatureChange(e, v, 8), min: -1, max: 1 },
+              'Cheeks Bone Width ': { onChange: (e, v) => onFacialFeatureChange(e, v, 9), min: -1, max: 1 },
+              'Cheeks Width': { onChange: (e, v) => onFacialFeatureChange(e, v, 10), min: -1, max: 1 },
+              'Eyes Opening ': { onChange: (e, v) => onFacialFeatureChange(e, v, 11), min: -1, max: 1 },
+              'Lips Thickness': { onChange: (e, v) => onFacialFeatureChange(e, v, 12), min: -1, max: 1 },
+              'Jaw Bone Width': { onChange: (e, v) => onFacialFeatureChange(e, v, 13), min: -1, max: 1 },
+              'Jaw Bone Back Length': { onChange: (e, v) => onFacialFeatureChange(e, v, 14), min: -1, max: 1 },
+              'Chimp Bone Lowering': { onChange: (e, v) => onFacialFeatureChange(e, v, 15), min: -1, max: 1 },
+              'Chimp Bone Length': { onChange: (e, v) => onFacialFeatureChange(e, v, 16), min: -1, max: 1 },
+              'Chimp Bone Width': { onChange: (e, v) => onFacialFeatureChange(e, v, 17), min: -1, max: 1 },
+              'Chimp Hole': { onChange: (e, v) => onFacialFeatureChange(e, v, 18), min: -1, max: 1 },
+              'Neck Thickness': { onChange: (e, v) => onFacialFeatureChange(e, v, 19), min: -1, max: 1 },
+            }}
           />
         </List>
       </CreationNav>
