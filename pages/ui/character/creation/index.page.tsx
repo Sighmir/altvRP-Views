@@ -1,4 +1,4 @@
-import { List } from '@material-ui/core';
+import * as mui from '@material-ui/core';
 import CollapsableArrowSelectItem from 'components/CollapsableArrowSelectItem';
 import CollapsableButtonsItem from 'components/CollapsableButtonsItem';
 import CollapsableSliderItem from 'components/CollapsableSliderItem';
@@ -103,6 +103,10 @@ function CharacterCreation(): JSX.Element {
   const [chimpBoneWidth, setChimpBoneWidth] = React.useState<number>(0);
   const [chimpHole, setChimpHole] = React.useState<number>(0);
   const [neckThickness, setNeckThickness] = React.useState<number>(0);
+
+  const [firstName, setFirstName] = React.useState<string>('');
+  const [lastName, setLastName] = React.useState<string>('');
+  const [inputHelp, setInputHelp] = React.useState<string>('');
 
   const facialFeatureSetters = [
     setNoseWidth,
@@ -429,10 +433,45 @@ function CharacterCreation(): JSX.Element {
     proxy.view.setEyesColor(eyesColor);
   }, [eyesColor]);
 
+  React.useEffect(() => {
+    proxy.view.nameAlreadyExists = () => {
+      setInputHelp('This name already exists.');
+    };
+  }, []);
+
+  const setFirstNameValue = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.preventDefault();
+    let name = e.target.value.replace(/[^A-z]/g, '');
+    if (name) {
+      name = name[0].toUpperCase() + name.slice(1).toLowerCase();
+    }
+    setFirstName(name);
+  };
+
+  const setLastNameValue = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.preventDefault();
+    let name = e.target.value.replace(/[^A-z]/g, '');
+    if (name) {
+      name = name[0].toUpperCase() + name.slice(1).toLowerCase();
+    }
+    setLastName(name);
+  };
+
+  const createCharacter = () => {
+    setInputHelp('');
+    if (firstName.length < 3 || firstName.length > 20) {
+      setInputHelp('Names must be 3 to 20 characters long.');
+    } else if (lastName.length < 3 || lastName.length > 20) {
+      setInputHelp('Names must be 3 to 20 characters long.');
+    } else {
+      proxy.view.createCharacter(firstName, lastName);
+    }
+  };
+
   return (
     <div>
       <CreationNav>
-        <List>
+        <mui.List>
           <CollapsableButtonsItem
             primary={'GENDER'}
             onClick={() => toggle(setGenderOpen)}
@@ -524,7 +563,7 @@ function CharacterCreation(): JSX.Element {
             primary={'OVERLAY'}
             onClick={() => toggle(setOverlayOpen)}
             open={overlayOpen}
-            slidersFirst={true}
+            slidersFirst
             selects={{
               Blemishes: {
                 left: () => scroll(setBlemishes, data.overlay.blemishes, -1),
@@ -583,7 +622,7 @@ function CharacterCreation(): JSX.Element {
             primary={'FACIAL HAIR'}
             onClick={() => toggle(setFacialHairOpen)}
             open={facialHairOpen}
-            slidersFirst={true}
+            slidersFirst
             selects={{
               Style: {
                 left: () => scroll(setFacialHair, data.overlay.facialHair, -1),
@@ -611,7 +650,7 @@ function CharacterCreation(): JSX.Element {
             primary={'EYEBROWS'}
             onClick={() => toggle(setEyebrowsOpen)}
             open={eyebrowsOpen}
-            slidersFirst={true}
+            slidersFirst
             selects={{
               Style: {
                 left: () => scroll(setEyebrows, data.overlay.eyebrows, -1),
@@ -640,7 +679,7 @@ function CharacterCreation(): JSX.Element {
               primary={'BLUSH'}
               onClick={() => toggle(setBlushOpen)}
               open={blushOpen}
-              slidersFirst={true}
+              slidersFirst
               selects={{
                 Style: {
                   left: () => scroll(setBlush, data.overlay.blush, -1),
@@ -670,7 +709,7 @@ function CharacterCreation(): JSX.Element {
               primary={'LIPSTICK'}
               onClick={() => toggle(setLipstickOpen)}
               open={lipstickOpen}
-              slidersFirst={true}
+              slidersFirst
               selects={{
                 Style: {
                   left: () => scroll(setLipstick, data.overlay.lipstick, -1),
@@ -699,7 +738,7 @@ function CharacterCreation(): JSX.Element {
             primary={'CHEST HAIR'}
             onClick={() => toggle(setChestHairOpen)}
             open={chestHairOpen}
-            slidersFirst={true}
+            slidersFirst
             selects={{
               Style: {
                 left: () => scroll(setChestHair, data.overlay.chestHair, -1),
@@ -750,7 +789,29 @@ function CharacterCreation(): JSX.Element {
               'Neck Thickness': { onChange: (e, v) => onFacialFeatureChange(e, v, 19), min: -1, max: 1 },
             }}
           />
-        </List>
+          <mui.ListItem component={mui.FormGroup}>
+            <mui.Grid container>
+              <mui.Grid xs={6}>
+                <mui.FormControl>
+                  <mui.InputLabel htmlFor="first-name">First name</mui.InputLabel>
+                  <mui.Input type="text" id="first-name" value={firstName} onChange={setFirstNameValue} />
+                </mui.FormControl>
+              </mui.Grid>
+              <mui.Grid xs={6}>
+                <mui.FormControl>
+                  <mui.InputLabel htmlFor="last-name">Last name</mui.InputLabel>
+                  <mui.Input type="text" id="last-name" value={lastName} onChange={setLastNameValue} />
+                </mui.FormControl>
+              </mui.Grid>
+              <mui.FormHelperText id="helper-text" error>
+                {inputHelp}
+              </mui.FormHelperText>
+            </mui.Grid>
+          </mui.ListItem>
+          <mui.ListItem component={mui.Button} onClick={createCharacter}>
+            <mui.ListItemText primary="CREATE" style={{ textAlign: 'center' }} />
+          </mui.ListItem>
+        </mui.List>
       </CreationNav>
     </div>
   );
